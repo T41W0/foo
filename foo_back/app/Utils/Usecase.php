@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Hash;
 class Usecase
 {
 
+    public static function isAdmin(mixed $user, mixed $callback): mixed
+    {
+        if (in_array($user->email, ["admin@admin.com", "administrator@admin.com"])) {
+            return call_user_func($callback);
+        } else {
+            return new ForbiddenResponse(["message" => "access denied!"]);
+        }
+    }
     /**
      * checks if a user exist
      * @param int $user

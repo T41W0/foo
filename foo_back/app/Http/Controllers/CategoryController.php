@@ -2,49 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
+use App\Models\Category;
 use App\Utils\Errors\ForbiddenResponse;
 use App\Utils\Errors\SuccessResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class OrderController extends Controller
+class CategoryController extends Controller
 {
     public function get()
     {
-        $products = Order::with(["cart"])->get();
+        $products = Category::with(["products"])->get();
         return new SuccessResponse($products);
 
     }
     public function fetch($id)
     {
-        $products = Order::where("id", "=", $id)->with(["cart"])->first();
+        $products = Category::where("id", "=", $id)->with(["products"])->first();
         return new SuccessResponse($products);
 
     }
     public function add(Request $request)
     {
-        $orderId = md5(time() + 300 * rand(time(), time() * 5000));
-
         $validate = Validator::make($request->all(), [
-            "cart" => "required",
+            "name" => "required",
         ]);
         if ($validate->fails()) {
             return new ForbiddenResponse($validate->messages()->all());
         }
+        $products = new Category();
+        $products->name = $request->name;
+        $products->save();
+        return new SuccessResponse($products);
+    }
+    public function update(Request $request, $id)
+    {
+        $products = Category::where("id", "=", $id)->first();
+        if (!$products) {
+            return new ForbiddenResponse(["message" => "category is not found"]);
+        }
 
-        $products = new Order();
-        $products->cart = $request->cart;
-        $products->order_id = $orderId;
+        if ($request->has("name")) {
+            $products->name = $request->name;
+        }
+
         $products->save();
         return new SuccessResponse($products);
     }
 
     public function delete($id)
     {
-        $products = Order::where("id", "=", $id)->first();
+        $products = Category::where("id", "=", $id)->first();
         if (!$products) {
-            return new ForbiddenResponse(["message" => "Order is not found"]);
+            return new ForbiddenResponse(["message" => "category is not found"]);
         }
         $products->delete();
         $products->save();
