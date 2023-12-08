@@ -9,10 +9,9 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $table = 'orders';
+    public function cart()
+    {
+        $this->belongsTo(Cart::class, "id", "cart");
+    }
 
-    protected $fillable = [
-        'cart',
-        'order_id',
-    ];
 }
