@@ -1,0 +1,18 @@
+import axios, { InternalAxiosRequestConfig } from "axios";
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore;
+export const BaseUrl = window.host;
+
+
+export const Config = () => {
+    axios.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+        const token: string = localStorage.getItem("token") ?? "";
+        const bearerString = token !== "" ? `Bearer ${token}` : "";
+        if (bearerString !== "") {
+            config.headers.Authorization = bearerString;
+        }
+        config.withCredentials = true;
+        return config;
+    });
+}

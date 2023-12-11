@@ -1,16 +1,10 @@
-import { ListCat } from "./components/list/listcaterogy";
-
+import { BrowserRouter as Router, Routes } from "react-router-dom"
+import { AllRoutes } from "./routes/routes";
+import { Config } from "./remotes/config";
 function App() {
-  return (
-    <ListCat
-      children={[
-        { href: "http//", text: "mens" },
-        { href: "http//ndnnd", text: "children" },
-        { href: "http//", text: "ladies" },
-        { href: "http//", text: "guys" },
-      ]}
-    />
-  );
+  Config();
+
+  return <Router><Routes>{AllRoutes}</Routes></Router>
 }
 
 export default App;
