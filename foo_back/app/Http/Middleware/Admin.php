@@ -19,8 +19,7 @@ class Admin
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (Auth::check()) {
-
+        if (auth()->check()) {
             return Usecase::isAdmin(auth()->user(), function () use ($request, $next) {
                 return $next($request);
             });

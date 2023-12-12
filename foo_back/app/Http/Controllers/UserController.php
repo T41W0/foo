@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Helpers\UseCase;
 use App\Models\User;
 use App\Utils\Errors\ForbiddenResponse;
 use App\Utils\Errors\SuccessResponse;
@@ -11,6 +12,11 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    public function getUser()
+    {
+        return User::where("id", "=", auth()->id())->first();
+    }
+
     public function login(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -50,7 +56,11 @@ class UserController extends Controller
         $user = new User();
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->role = "user";
+        \App\Utils\Usecase::isAdmin($request->email, function () use ($user) {
+            $user->role = "admin";
+            $user->save();
+
+        });
         $user->save();
         //send login mail
         //   auth()->login($query);
