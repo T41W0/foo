@@ -28,9 +28,10 @@ export const AddProduct: FC = () => {
         <input onChange={change} name="name" type="text" className="px-4 py-1 border rounded-md" placeholder="Product Name" />
         <label>Product Category</label>
         <select onChange={(ev) => {
-            setInputs({ ...input, "category": ev.target.value })
-        }} name="category" className="px-4 py-1 border rounded-md" >
 
+           setInputs({ ...input, "category": ev.target.value })
+        }} name="category" className="px-4 py-1 border rounded-md" >
+            <option selected value={""}>Select Category</option>
             {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 //@ts-ignore

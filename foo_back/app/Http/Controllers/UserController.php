@@ -56,6 +56,7 @@ class UserController extends Controller
         $user = new User();
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->role="user";
         \App\Utils\Usecase::isAdmin($request->email, function () use ($user) {
             $user->role = "admin";
             $user->save();
